@@ -26,6 +26,9 @@ let startBtn = document.getElementById("start"),
 
 let money, time;
 
+expensesBtn.disabled = true;
+optionalExpensesBtn.disabled = true;
+countBtn.disabled = true;
 
 startBtn.addEventListener('click' , function() {
 		time = prompt ("Введите дату в формате YYYY-MM-DD", "");
@@ -40,6 +43,10 @@ startBtn.addEventListener('click' , function() {
     yearValue.value = new Date(Date.parse(time)).getFullYear();
     monthValue.value = new Date(Date.parse(time)).getMonth() +1;
     dayValue.value =  new Date(Date.parse(time)).getDate();
+
+    expensesBtn.disabled = false;
+    optionalExpensesBtn.disabled = false;
+    countBtn.disabled = false;
 });
 
 expensesBtn.addEventListener('click', function(){
@@ -52,8 +59,9 @@ expensesBtn.addEventListener('click', function(){
     
             console.log ("done");
     
-            appData.expenses[a] = b;
+            appData.expenses[a] = +b;
             sum += +b;
+            appData.expensesSum = sum;
         } else {
             console.log ("bad result");
             i--;
@@ -75,7 +83,11 @@ optionalExpensesBtn.addEventListener('click', function(){
 
 countBtn.addEventListener('click', function(){
     if (appData.budget != undefined) {
+<<<<<<< HEAD
         appData.moneyPerDay = (appData.budget / 30).toFixed();
+=======
+        appData.moneyPerDay = ((appData.budget - appData.expensesSum) / 30).toFixed();
+>>>>>>> 55863eb49c80527e04cc9acda087d230aeb48d4e
         dayBudgetValue.textContent = appData.moneyPerDay;
 
         if (appData.moneyPerDay < 100) {
@@ -86,6 +98,7 @@ countBtn.addEventListener('click', function(){
             levelValue.textContent = "Это высокий уровень достатка!";
         } else {
             levelValue.textContent = "Ошибочка...!";
+<<<<<<< HEAD
         }
     } else {
         dayBudgetValue.textContent = "Пожалуйста, нажмите 'Начнить расчет'!";
@@ -129,24 +142,66 @@ let appData = {
     chooseIncome: function () {
 
         
-
-        if (typeof(items) != "string" || items == "" || typeof(items) == null) {
-            console.log("Вы ввели некорректные данные или не ввели их вовсе");
-        } else {
-            appData.income = items.split(", ");
-            appData.income.push(prompt("Может что-то еще?"));
-            appData.income.sort();
+=======
         }
-
-        appData.income.forEach (function (itemmassive, i) {
-            alert("Способы доп. заработка: " + (i+1) + " - " + itemmassive);
-        });
-
+    } else {
+        dayBudgetValue.textContent = "Пожалуйста, нажмите 'Начнить расчет'!";
     }
+});
 
+incomeItem.addEventListener('input', function(){
+    let items = incomeItem.value;
+    appData.income = items.split(' , ');
+    incomeValue.textContent = appData.income;
+>>>>>>> 55863eb49c80527e04cc9acda087d230aeb48d4e
 
-};
+});
 
-for (let key in appData) {
-    console.log("Наша программа включает в себя данные: " + key + " - " + appData[key]);
+checkSavings.addEventListener('click', function(){
+    if (appData.savings == true) {
+        appData.savings = false;
+    } else {
+        appData.savings = true;
+    }
+});
+
+sumValue.addEventListener('input', function(){
+    if (appData.savings == true){
+            let sum = +sumValue.value,
+                percent = +percentValue.value
+
+                appData.monthIncome = sum/100/12*percent;
+                appData.yearIncome = sum/100*percent;
+
+                monthSavingsValue.textContent = appData.monthIncome.toFixed(1);
+                yearSavingsValue.textContent = appData.yearIncome.toFixed(1);
+    }
+    
+            
+
+});
+
+percentValue.addEventListener('input', function(){
+    if (appData.savings == true){
+        let sum = +sumValue.value,
+            percent = +percentValue.value
+
+            appData.monthIncome = sum/100/12*percent;
+            appData.yearIncome = sum/100*percent;
+
+            monthSavingsValue.textContent = appData.monthIncome.toFixed(1);
+            yearSavingsValue.textContent = appData.yearIncome.toFixed(1);
 }
+});
+
+
+
+
+let appData = {
+    budget: money,
+    timeData: time,
+    expenses: {},
+    optionalExpenses: {},
+    income: [],
+    savings: false
+};
